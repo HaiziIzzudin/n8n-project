@@ -38,7 +38,7 @@ Hereâ€™s a straightforward way to set up **passwordless SSH login from Windows â
 4. **Fix permissions in Termux**  
    In Termux, run:  
    ```bash
-   chmod 700 ~/.ssh
+   chmod 700 ~/.ssh && \
    chmod 600 ~/.ssh/authorized_keys
    ```
 
