@@ -100,4 +100,6 @@ It’ll automatically pick the right port, user, and key.
 
 ## transfer/ copy file to the remote machine
 
+```
 scp -P 8022 "file.txt" phone:~
+```
