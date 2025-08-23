@@ -2,6 +2,8 @@
 
 ## setup termux for pubkey auth
 
+Looking for debian setup instead? [click here](#for-debian-setup-assuming-you-have-clean-slate)
+
 Here’s a straightforward way to set up **passwordless SSH login from Windows → Termux** so you won’t need to enter your password each time. I’ll summarize the process using the [Termux Wiki](https://wiki.termux.com/wiki/Remote_Access) and a practical [GitHub guide](https://gist.github.com/evandrocoan/f503188587587d7b1d1ba8746c9c6107):
 
 ### Steps
@@ -103,3 +105,35 @@ It’ll automatically pick the right port, user, and key.
 ```
 scp -P 8022 "file.txt" phone:~
 ```
+
+
+
+
+## for debian setup (assuming you have clean slate)
+
+follow generate key on windows host like above, but don't transfer yet. Your remote debian most likely don't have .ssh folder. Create first
+
+```bash
+ssh user@10.147.XX.XXX -p 8022
+```
+
+then
+
+```bash
+mkdir ~/.ssh && \
+chmod 700 ~/.ssh
+```
+
+then
+
+```bash
+exit
+```
+
+then, use command below to transfer pubkey to your remote debian system
+
+```
+scp -P 8022 C:\Users\<user>\.ssh\id_rsa.pub user@10.147.XX.XXX:~/.ssh/authorized_keys
+```
+
+Try login. Should be there is no prompt for password anymore and you will log in.
