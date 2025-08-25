@@ -131,9 +131,71 @@ exit
 ```
 
 then, use command below to transfer pubkey to your remote debian system
-
 ```
 scp -P 8022 C:\Users\<user>\.ssh\id_rsa.pub user@10.147.XX.XXX:~/.ssh/authorized_keys
 ```
 
 Try login. Should be there is no prompt for password anymore and you will log in.
+
+
+
+
+
+## Changing the SSH Port on Fedora
+
+To enhance security, changing the default SSH port from **22** to a different port is a common practice. Here’s how to do it on a Fedora system.
+
+### Step-by-Step Instructions
+
+1. **Connect to Your Server**: Use SSH to log in to your server as the root user or a user with sudo privileges.
+
+2. **Backup the Configuration File**: Before making changes, it's wise to back up the SSH configuration file.
+   ```bash
+   sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+   ```
+
+3. **Edit the SSH Configuration File**: Open the SSH daemon configuration file in a text editor.
+   ```bash
+   sudo nano /etc/ssh/sshd_config
+   ```
+   Locate the line that says `#Port 22` and change it to your desired port number (e.g., `Port 8022`). Remove the `#` to uncomment the line.
+
+4. **Edit the SSH Socket Configuration**: You also need to modify the SSH socket configuration.
+   ```bash
+   sudo systemctl edit sshd.socket
+   ```
+   In the editor, add or modify the following lines in between where it says add in this area (be aware to not just uncomment since settings below certain comment line will be discarded):
+   ```
+   ListenStream=
+   ListenStream=8022
+   ```
+   This clears the old port and sets the new one.
+
+5. **Adjust Firewall Rules**: If you have a firewall enabled (like `firewalld`), you need to allow the new port and remove the old one.
+   ```bash
+   sudo firewall-cmd --permanent --add-port=8022/tcp
+   sudo firewall-cmd --permanent --remove-port=22/tcp
+   sudo firewall-cmd --reload
+   ```
+
+6. **Update SELinux Configuration**: If SELinux is enabled, you need to allow the new port.
+   ```bash
+   sudo semanage port -a -t ssh_port_t -p tcp 8022
+   ```
+
+7. **Restart the SSH Service**: Apply the changes by restarting the SSH daemon.
+   ```bash
+   sudo systemctl restart sshd
+   ```
+
+8. **Test the New SSH Port**: Before logging out of your current session, open a new terminal and try connecting to the server using the new port:
+   ```bash
+   ssh username@your_server_ip -p 8022
+   ```
+
+### Important Notes
+- Ensure that the new port you choose is not already in use by another service.
+- Always test the new configuration before closing your current SSH session to avoid being locked out.
+- If you encounter issues, you can revert to the backup configuration file you created earlier.
+
+By following these steps, you can successfully change the SSH port on your Fedora server, enhancing its security against unauthorized access.
