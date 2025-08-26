@@ -199,3 +199,12 @@ To enhance security, changing the default SSH port from **22** to a different po
 - If you encounter issues, you can revert to the backup configuration file you created earlier.
 
 By following these steps, you can successfully change the SSH port on your Fedora server, enhancing its security against unauthorized access.
+
+#### If you install default ffmpeg in fedora, it installs the free version (don't have proprietary codecs). Please install the non-free version:
+
+```
+sudo dnf install \
+  https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+  https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm && \
+sudo dnf update --allowerasing ffmpeg ffmpeg-libs
+```
